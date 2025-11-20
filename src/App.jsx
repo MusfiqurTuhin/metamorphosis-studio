@@ -521,31 +521,31 @@ export default function StoryBuilder() {
 
 
      {/* SIDEBAR */}
-     <div className="w-full md:w-96 bg-gray-800 border-t md:border-t-0 md:border-r border-gray-700 flex flex-col z-20 order-2 md:order-1 h-[45%] md:h-full">
-         <div className="p-4 md:p-5 border-b border-gray-700 bg-gray-800 sticky top-0 z-10">
+     <div className="w-full md:w-96 bg-gray-800 border-t md:border-t-0 md:border-r border-gray-700 flex flex-col z-20 order-2 md:order-1 h-[50%] md:h-full md:min-h-0">
+         <div className="p-3 md:p-5 border-b border-gray-700 bg-gray-800 sticky top-0 z-10">
            <div className="flex justify-between items-center mb-1">
-               <h1 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 flex items-center gap-2">
-                   <Smartphone className="w-5 h-5 text-orange-500" /> Metamorphosis Studio
+               <h1 className="text-base md:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 flex items-center gap-2 min-w-0">
+                   <Smartphone className="w-4 md:w-5 h-4 md:h-5 text-orange-500 flex-shrink-0" /> <span className="truncate">Metamorphosis Studio</span>
                </h1>
            </div>
-           <div className="flex items-center gap-2"><span className="text-[10px] uppercase font-bold tracking-widest bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full border border-orange-500/30">Special AMP Story Maker</span></div>
+           <div className="flex items-center gap-2"><span className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full border border-orange-500/30">AMP Story Maker</span></div>
          </div>
 
 
-         <div className="flex border-b border-gray-700">
-            <button onClick={() => setActiveTab('content')} className={`flex-1 py-3 text-sm font-medium ${activeTab==='content'?'bg-gray-700 text-orange-400 border-b-2 border-orange-500':'text-gray-400'}`}>Content</button>
-            <button onClick={() => setActiveTab('design')} className={`flex-1 py-3 text-sm font-medium ${activeTab==='design'?'bg-gray-700 text-violet-400 border-b-2 border-violet-500':'text-gray-400'}`}>Design</button>
+         <div className="flex border-b border-gray-700 bg-gray-750">
+            <button onClick={() => setActiveTab('content')} className={`flex-1 py-2 md:py-3 text-xs md:text-sm font-medium transition-colors ${activeTab==='content'?'bg-gray-700 text-orange-400 border-b-2 border-orange-500':'text-gray-400 hover:text-gray-300'}`}>Content</button>
+            <button onClick={() => setActiveTab('design')} className={`flex-1 py-2 md:py-3 text-xs md:text-sm font-medium transition-colors ${activeTab==='design'?'bg-gray-700 text-violet-400 border-b-2 border-violet-500':'text-gray-400 hover:text-gray-300'}`}>Design</button>
          </div>
         
-         <div className="flex-grow overflow-y-auto p-6 space-y-6 custom-scrollbar">
+         <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 custom-scrollbar">
             {activeTab === 'content' && (
                <>
-                  <div className="space-y-3">
-                      <div className="flex justify-between text-sm text-gray-400 font-bold"><span>Layers</span><button onClick={addTextLayer} className="text-orange-400 hover:text-orange-300"><Plus className="w-4 h-4"/></button></div>
+                  <div className="space-y-2 md:space-y-3">
+                      <div className="flex justify-between text-xs md:text-sm text-gray-400 font-bold"><span>Layers</span><button onClick={addTextLayer} className="text-orange-400 hover:text-orange-300 hover:bg-orange-400/10 rounded p-1"><Plus className="w-3 md:w-4 h-3 md:h-4"/></button></div>
                       {activePage.texts.map(text => (
-                          <div key={text.id} onClick={() => { setActiveLayerId(text.id); setActiveTab('design'); }} className={`p-3 rounded border cursor-pointer flex justify-between group ${activeLayerId === text.id ? 'bg-gray-700 border-orange-500' : 'bg-gray-800 border-gray-700 hover:border-gray-600'}`}>
-                             <span className="truncate w-32 text-sm">{text.content}</span>
-                             <button onClick={(e) => { e.stopPropagation(); deleteLayer(text.id); }} className="text-gray-500 hover:text-red-400"><Trash2 className="w-3 h-3"/></button>
+                          <div key={text.id} onClick={() => { setActiveLayerId(text.id); setActiveTab('design'); }} className={`p-2 md:p-3 rounded border cursor-pointer flex justify-between group text-xs md:text-sm transition-all ${activeLayerId === text.id ? 'bg-gray-700 border-orange-500 shadow-lg' : 'bg-gray-800 border-gray-700 hover:border-gray-600'}`}>
+                             <span className="truncate flex-1">{text.content}</span>
+                             <button onClick={(e) => { e.stopPropagation(); deleteLayer(text.id); }} className="text-gray-500 hover:text-red-400 ml-2 flex-shrink-0"><Trash2 className="w-3 h-3 md:w-3.5 md:h-3.5"/></button>
                           </div>
                       ))}
                   </div>
@@ -566,18 +566,18 @@ export default function StoryBuilder() {
 
 
             {activeTab === 'design' && activeLayer && (
-                <div className="space-y-6">
+                <div className="space-y-4 md:space-y-6">
                     <div className="border-b border-gray-700 pb-4">
-                       <label className="block text-xs mb-2 text-orange-400 font-semibold flex items-center gap-1">
+                       <label className="flex text-xs md:text-sm mb-2 text-orange-400 font-semibold items-center gap-1 uppercase">
                            <Monitor className="w-3 h-3" /> Canvas Size
                        </label>
-                       <select value={resolution.label} onChange={handleResolutionChange} className="w-full bg-gray-700 border-gray-600 rounded p-2 text-xs text-white outline-none focus:border-orange-500">
+                       <select value={resolution.label} onChange={handleResolutionChange} className="w-full bg-gray-700 border border-gray-600 rounded p-2 md:p-2.5 text-xs md:text-sm text-white outline-none focus:border-orange-500 transition-colors">
                            {RESOLUTIONS.map((res, i) => <option key={i} value={res.label}>{res.label}</option>)}
                        </select>
                     </div>
                     {activeLayer ? (
                       <>
-                        <div><label className="text-xs font-bold text-gray-500 uppercase mb-1">Text Content</label><textarea value={activeLayer.content} onChange={(e) => updateTextLayer(activeLayerId, 'content', e.target.value)} className="w-full bg-gray-700 border-gray-600 rounded p-2 text-sm text-white h-20" /></div>
+                        <div><label className="text-xs md:text-sm font-bold text-gray-500 uppercase mb-2 block">Text Content</label><textarea value={activeLayer.content} onChange={(e) => updateTextLayer(activeLayerId, 'content', e.target.value)} className="w-full bg-gray-700 border border-gray-600 rounded p-2 md:p-3 text-sm md:text-base text-white h-20 resize-none focus:border-orange-500 outline-none transition-colors" /></div>
                         <div className="space-y-3 border-t border-gray-700 pt-4"><label className="text-xs font-bold text-orange-400 uppercase">Typography</label><div className="grid grid-cols-2 gap-2"><select value={activeLayer.font} onChange={(e) => updateTextLayer(activeLayerId, 'font', e.target.value)} className="col-span-2 w-full bg-gray-700 border-gray-600 rounded p-1.5 text-xs">{FONTS.map(f=><option key={f.value} value={f.value}>{f.label}</option>)}</select><div className="flex items-center gap-2"><TypeIcon className="w-3 h-3 text-gray-500"/><input type="number" value={activeLayer.size} onChange={(e) => updateTextLayer(activeLayerId, 'size', parseInt(e.target.value))} className="w-full bg-gray-700 border-gray-600 rounded p-1.5 text-xs" /></div><div className="flex items-center gap-2"><Bold className="w-3 h-3 text-gray-500"/><select value={activeLayer.weight} onChange={(e) => updateTextLayer(activeLayerId, 'weight', e.target.value)} className="w-full bg-gray-700 border-gray-600 rounded p-1.5 text-xs"><option value="400">Normal</option><option value="700">Bold</option><option value="900">Heavy</option></select></div></div><div className="flex gap-2"><button onClick={() => updateTextLayer(activeLayerId, 'italic', !activeLayer.italic)} className={`p-1.5 rounded flex-1 ${activeLayer.italic?'bg-orange-500 text-white':'bg-gray-700 text-gray-400'}`}><Italic className="w-3 h-3 mx-auto"/></button><button onClick={() => updateTextLayer(activeLayerId, 'uppercase', !activeLayer.uppercase)} className={`p-1.5 rounded flex-1 ${activeLayer.uppercase?'bg-orange-500 text-white':'bg-gray-700 text-gray-400'}`}><TypeIcon className="w-3 h-3 mx-auto"/></button><div className="flex bg-gray-700 rounded p-0.5 flex-[2]">{['left','center','right'].map(a=><button key={a} onClick={()=>updateTextLayer(activeLayerId,'align',a)} className={`flex-1 rounded p-1 ${activeLayer.align===a?'bg-gray-600 text-white':'text-gray-400'}`}>{a==='left'?<AlignLeft className="w-3 h-3 mx-auto"/>:a==='center'?<AlignCenter className="w-3 h-3 mx-auto"/>:<AlignRight className="w-3 h-3 mx-auto"/>}</button>)}</div></div></div>
                         <div className="space-y-3 border-t border-gray-700 pt-4">
                            <label className="text-xs font-bold text-purple-400 uppercase">Appearance</label>
@@ -604,43 +604,43 @@ export default function StoryBuilder() {
                       </>
                     ) : <div className="text-gray-500 text-center py-10 text-sm">Select a text layer to edit</div>}
                    
-                    <div className="border-t border-gray-700 pt-4"><label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><Sun className="w-3 h-3" /> Image Adjustments</label><div className="space-y-3"><div className="flex items-center gap-2 text-xs text-gray-400"><Sun className="w-3 h-3"/> Brightness <input type="range" min="50" max="150" value={activePage.filters?.brightness || 100} onChange={(e) => handleNestedChange('filters', 'brightness', e.target.value)} className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none"/></div><div className="flex items-center gap-2 text-xs text-gray-400"><Contrast className="w-3 h-3"/> Contrast <input type="range" min="50" max="150" value={activePage.filters?.contrast || 100} onChange={(e) => handleNestedChange('filters', 'contrast', e.target.value)} className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none"/></div><div className="flex items-center gap-2 text-xs text-gray-400"><Droplet className="w-3 h-3"/> Saturate <input type="range" min="0" max="200" value={activePage.filters?.saturate || 100} onChange={(e) => handleNestedChange('filters', 'saturate', e.target.value)} className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none"/></div></div></div>
-                    <div className="border-t border-gray-700 pt-4 pb-4"><label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><ArrowUp className="w-3 h-3" /> Background Overlay</label><div className="flex gap-3 items-center"><input type="color" value={activePage.overlay?.color || '#000000'} onChange={(e) => handleNestedChange('overlay', 'color', e.target.value)} className="h-8 w-8 rounded bg-transparent border-none" /><div className="flex-1 space-y-1"><div className="flex justify-between text-[10px] text-gray-500"><span>Opacity</span><span>{Math.round((activePage.overlay?.opacity || 0.6)*100)}%</span></div><input type="range" min="0" max="1" step="0.1" value={activePage.overlay?.opacity || 0.6} onChange={(e) => handleNestedChange('overlay', 'opacity', e.target.value)} className="w-full h-1 bg-gray-600 rounded-lg appearance-none"/></div><div className="flex-1 space-y-1"><div className="flex justify-between text-[10px] text-gray-500"><span>Height</span><span>{activePage.overlay?.height || 40}%</span></div><input type="range" min="0" max="100" value={activePage.overlay?.height || 40} onChange={(e) => handleNestedChange('overlay', 'height', e.target.value)} className="w-full h-1 bg-gray-600 rounded-lg appearance-none"/></div></div></div>
+                    <div className="border-t border-gray-700 pt-4"><label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><Sun className="w-3 h-3" /> Image Adjustments</label><div className="space-y-2 md:space-y-3"><div className="flex items-center gap-2 text-xs text-gray-400"><Sun className="w-3 h-3"/> Brightness <input type="range" min="50" max="150" value={activePage.filters?.brightness || 100} onChange={(e) => handleNestedChange('filters', 'brightness', e.target.value)} className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none"/></div><div className="flex items-center gap-2 text-xs text-gray-400"><Contrast className="w-3 h-3"/> Contrast <input type="range" min="50" max="150" value={activePage.filters?.contrast || 100} onChange={(e) => handleNestedChange('filters', 'contrast', e.target.value)} className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none"/></div><div className="flex items-center gap-2 text-xs text-gray-400"><Droplet className="w-3 h-3"/> Saturate <input type="range" min="0" max="200" value={activePage.filters?.saturate || 100} onChange={(e) => handleNestedChange('filters', 'saturate', e.target.value)} className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none"/></div></div></div>
+                    <div className="border-t border-gray-700 pt-4 pb-4"><label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><ArrowUp className="w-3 h-3" /> Background Overlay</label><div className="flex gap-2 md:gap-3 items-start md:items-center flex-col md:flex-row"><input type="color" value={activePage.overlay?.color || '#000000'} onChange={(e) => handleNestedChange('overlay', 'color', e.target.value)} className="h-8 w-8 md:h-10 md:w-10 rounded bg-transparent border-none cursor-pointer flex-shrink-0" /><div className="flex-1 w-full space-y-1"><div className="flex justify-between text-[10px] text-gray-500"><span>Opacity</span><span>{Math.round((activePage.overlay?.opacity || 0.6)*100)}%</span></div><input type="range" min="0" max="1" step="0.1" value={activePage.overlay?.opacity || 0.6} onChange={(e) => handleNestedChange('overlay', 'opacity', e.target.value)} className="w-full h-1 bg-gray-600 rounded-lg appearance-none"/></div><div className="flex-1 w-full space-y-1"><div className="flex justify-between text-[10px] text-gray-500"><span>Height</span><span>{activePage.overlay?.height || 40}%</span></div><input type="range" min="0" max="100" value={activePage.overlay?.height || 40} onChange={(e) => handleNestedChange('overlay', 'height', e.target.value)} className="w-full h-1 bg-gray-600 rounded-lg appearance-none"/></div></div></div>
                 </div>
             )}
          </div>
 
 
          {/* Footer */}
-         <div className="p-4 border-t border-gray-700 bg-gray-800 z-50 space-y-2">
-            {isExportingVideo ? <button disabled className="w-full h-12 bg-gray-700 rounded text-white flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin"/> {Math.round(exportProgress)}%</button> :
-            <button onClick={() => generateVideo('all')} className="w-full h-12 bg-gradient-to-r from-orange-500 to-purple-600 rounded text-white font-bold shadow-lg hover:shadow-orange-500/20 flex items-center justify-center gap-2"><Video className="w-4 h-4"/> Export Video</button>}
-            <div className="flex gap-2"><button onClick={generateHTML} className="flex-1 bg-gray-700 rounded h-8 text-xs text-white">Download HTML</button></div>
+         <div className="p-3 md:p-4 border-t border-gray-700 bg-gray-800 z-50 space-y-2 flex-shrink-0">
+            {isExportingVideo ? <button disabled className="w-full h-10 md:h-12 bg-gray-700 rounded text-white flex items-center justify-center gap-2 text-sm md:text-base"><Loader2 className="w-3.5 md:w-4 h-3.5 md:h-4 animate-spin"/> {Math.round(exportProgress)}%</button> :
+            <button onClick={() => generateVideo('all')} className="w-full h-10 md:h-12 bg-gradient-to-r from-orange-500 to-purple-600 rounded text-white font-bold shadow-lg hover:shadow-orange-500/20 flex items-center justify-center gap-2 text-sm md:text-base transition-all"><Video className="w-3.5 md:w-4 h-3.5 md:h-4"/> Export Video</button>}
+            <div className="flex gap-2"><button onClick={generateHTML} className="flex-1 bg-gray-700 rounded h-8 md:h-10 text-xs md:text-sm text-white hover:bg-gray-600 transition-colors">Download HTML</button></div>
          </div>
      </div>
     
      {/* PREVIEW - Single Canvas Source of Truth */}
-     <div className="flex-1 bg-black flex flex-col items-center justify-center relative overflow-hidden select-none order-1 md:order-2 h-[55%] md:h-full">
-        <div className="absolute top-6 right-6 z-50">
-            <button onClick={() => setShowDownloadMenu(!showDownloadMenu)} className="bg-white/10 p-3 rounded-full backdrop-blur-md hover:bg-white/20 text-white"><Download className="w-5 h-5"/></button>
+     <div className="flex-1 bg-black flex flex-col items-center justify-center relative overflow-hidden select-none order-1 md:order-2 h-[50%] md:h-full md:min-h-0">
+        <div className="absolute top-3 md:top-6 right-3 md:right-6 z-50">
+            <button onClick={() => setShowDownloadMenu(!showDownloadMenu)} className="bg-white/10 p-2 md:p-3 rounded-full backdrop-blur-md hover:bg-white/20 text-white transition-all"><Download className="w-4 md:w-5 h-4 md:h-5"/></button>
             {showDownloadMenu && (
-                <div className="absolute right-0 top-12 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-2 z-50">
-                    <button onClick={downloadJPG} className="w-full text-left p-2 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2"><Camera className="w-4 h-4"/> JPG Image</button>
-                    <button onClick={() => generateVideo('current')} className="w-full text-left p-2 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2"><Play className="w-4 h-4"/> Current Slide</button>
+                <div className="absolute right-0 top-12 w-44 md:w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-2 z-50">
+                    <button onClick={downloadJPG} className="w-full text-left p-2 hover:bg-gray-700 rounded text-xs md:text-sm text-gray-300 flex gap-2 transition-colors"><Camera className="w-3.5 md:w-4 h-3.5 md:h-4 flex-shrink-0"/> JPG Image</button>
+                    <button onClick={() => generateVideo('current')} className="w-full text-left p-2 hover:bg-gray-700 rounded text-xs md:text-sm text-gray-300 flex gap-2 transition-colors"><Play className="w-3.5 md:w-4 h-3.5 md:h-4 flex-shrink-0"/> Current Slide</button>
                 </div>
             )}
         </div>
 
 
-        <div className="absolute bottom-8 flex items-center gap-4 z-50">
-           <button onClick={() => setActivePageIndex(Math.max(0, activePageIndex-1))}><ChevronLeft className="text-white"/></button>
-           <button onClick={() => setIsPlaying(!isPlaying)} className={`p-4 rounded-full ${isPlaying?'bg-red-500':'bg-green-500'} text-white shadow-lg transform hover:scale-110 transition-all`}>{isPlaying?<Pause fill="currentColor" className="w-5 h-5"/>:<Play fill="currentColor" className="w-5 h-5 ml-1"/>}</button>
-           <div className="flex gap-2">{pages.map((_,i)=><div key={i} onClick={()=>setActivePageIndex(i)} className={`w-2 h-2 rounded-full cursor-pointer ${i===activePageIndex?'bg-orange-500 w-4':'bg-gray-600'}`}/>)}<button onClick={addNewPage} className="w-4 h-4 bg-white text-black rounded-full flex items-center justify-center text-[10px] font-bold hover:scale-110 transition-transform">+</button></div>
-           <button onClick={() => setActivePageIndex(Math.min(pages.length-1, activePageIndex+1))}><ChevronRight className="text-white"/></button>
+        <div className="absolute bottom-4 md:bottom-8 flex items-center gap-2 md:gap-4 z-50">
+           <button onClick={() => setActivePageIndex(Math.max(0, activePageIndex-1))} className="p-1 md:p-2 hover:bg-white/10 rounded transition-colors"><ChevronLeft className="text-white w-4 md:w-6 h-4 md:h-6"/></button>
+           <button onClick={() => setIsPlaying(!isPlaying)} className={`p-2 md:p-4 rounded-full ${isPlaying?'bg-red-500':'bg-green-500'} text-white shadow-lg transform hover:scale-110 transition-all`}>{isPlaying?<Pause fill="currentColor" className="w-4 md:w-5 h-4 md:h-5"/>:<Play fill="currentColor" className="w-4 md:w-5 h-4 md:h-5 ml-0.5"/>}</button>
+           <div className="flex gap-1.5 md:gap-2">{pages.map((_,i)=><div key={i} onClick={()=>setActivePageIndex(i)} className={`rounded-full cursor-pointer transition-all ${i===activePageIndex?'bg-orange-500 w-3 h-3 md:w-4 md:h-4':'bg-gray-600 w-2 h-2 md:w-2.5 md:h-2.5'}`}/>)}<button onClick={addNewPage} className="w-3 h-3 md:w-4 md:h-4 bg-white text-black rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-bold hover:scale-110 transition-transform">+</button></div>
+           <button onClick={() => setActivePageIndex(Math.min(pages.length-1, activePageIndex+1))} className="p-1 md:p-2 hover:bg-white/10 rounded transition-colors"><ChevronRight className="text-white w-4 md:w-6 h-4 md:h-6"/></button>
         </div>
 
 
-        <div ref={containerRef} className="w-full h-full flex items-center justify-center bg-neutral-950">
+        <div ref={containerRef} className="w-full h-full flex items-center justify-center bg-neutral-950 p-2 md:p-0">
             <div ref={previewRef} className="relative shadow-2xl"
                  style={{ width: resolution.width, height: resolution.height, transform: `scale(${previewScale})`, transformOrigin: 'center center' }}
                  onMouseDown={(e) => startDrag(e, 'image')}
