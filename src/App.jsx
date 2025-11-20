@@ -532,12 +532,12 @@ export default function StoryBuilder() {
          </div>
 
 
-         <div className="flex border-b border-gray-700 bg-gray-750">
-            <button onClick={() => setActiveTab('content')} className={`flex-1 py-2 md:py-3 text-xs md:text-sm font-medium transition-colors ${activeTab==='content'?'bg-gray-700 text-orange-400 border-b-2 border-orange-500':'text-gray-400 hover:text-gray-300'}`}>Content</button>
-            <button onClick={() => setActiveTab('design')} className={`flex-1 py-2 md:py-3 text-xs md:text-sm font-medium transition-colors ${activeTab==='design'?'bg-gray-700 text-violet-400 border-b-2 border-violet-500':'text-gray-400 hover:text-gray-300'}`}>Design</button>
+         <div className="flex border-b border-gray-700 bg-gray-750 gap-1 px-1">
+            <button onClick={() => setActiveTab('content')} className={`flex-1 py-2 md:py-3 text-xs md:text-sm font-medium transition-colors rounded-t ${activeTab==='content'?'bg-gray-700 text-orange-400 border-b-2 border-orange-500':'text-gray-400 hover:text-gray-300'}`}>Content</button>
+            <button onClick={() => setActiveTab('design')} className={`flex-1 py-2 md:py-3 text-xs md:text-sm font-medium transition-colors rounded-t ${activeTab==='design'?'bg-gray-700 text-violet-400 border-b-2 border-violet-500':'text-gray-400 hover:text-gray-300'}`}>Design</button>
          </div>
         
-         <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 custom-scrollbar">
+         <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 custom-scrollbar pb-8">
             {activeTab === 'content' && (
                <>
                   <div className="space-y-2 md:space-y-3">
@@ -612,7 +612,7 @@ export default function StoryBuilder() {
 
 
          {/* Footer */}
-         <div className="p-3 md:p-4 border-t border-gray-700 bg-gray-800 z-50 space-y-2 flex-shrink-0">
+         <div className="p-3 md:p-4 border-t border-gray-700 bg-gray-800 z-50 space-y-3 md:space-y-3 flex-shrink-0">
             {isExportingVideo ? <button disabled className="w-full h-10 md:h-12 bg-gray-700 rounded text-white flex items-center justify-center gap-2 text-sm md:text-base"><Loader2 className="w-3.5 md:w-4 h-3.5 md:h-4 animate-spin"/> {Math.round(exportProgress)}%</button> :
             <button onClick={() => generateVideo('all')} className="w-full h-10 md:h-12 bg-gradient-to-r from-orange-500 to-purple-600 rounded text-white font-bold shadow-lg hover:shadow-orange-500/20 flex items-center justify-center gap-2 text-sm md:text-base transition-all"><Video className="w-3.5 md:w-4 h-3.5 md:h-4"/> Export Video</button>}
             <div className="flex gap-2"><button onClick={generateHTML} className="flex-1 bg-gray-700 rounded h-8 md:h-10 text-xs md:text-sm text-white hover:bg-gray-600 transition-colors">Download HTML</button></div>
