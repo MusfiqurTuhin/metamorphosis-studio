@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Trash2, Download, Image as ImageIcon, Type, Play, Smartphone, Settings, ChevronRight, ChevronLeft, Video, Loader2, Palette, Layout, Monitor, Move, AlertTriangle, Layers, FileVideo, Check, Sparkles, Film, Camera, AlignLeft, AlignCenter, AlignRight, Bold, Italic, Type as TypeIcon, Pause, Copy, Sun, Contrast, Droplet, ArrowUp, X, Grid, Scaling, Menu } from 'lucide-react';
+import { Plus, Trash2, Download, Image as ImageIcon, Type, Play, Smartphone, Settings, ChevronRight, ChevronLeft, Video, Loader2, Palette, Layout, Monitor, Move, AlertTriangle, Layers, FileVideo, Check, Sparkles, Film, Camera, AlignLeft, AlignCenter, AlignRight, Bold, Italic, Type as TypeIcon, Pause, Copy, Sun, Contrast, Droplet, ArrowUp, X, Grid, Scaling, Menu, FileCode, Film as FilmIcon } from 'lucide-react';
 
 // --- AMP Boilerplate ---
 const AMP_BOILERPLATE = `<!DOCTYPE html>
@@ -142,9 +142,9 @@ export default function StoryBuilder() {
          const { width: containerW, height: containerH } = containerRef.current.getBoundingClientRect();
          if (containerW <= 0 || containerH <= 0) return;
 
-         // Reduced padding for mobile to maximize preview size
+         // Reduced padding for mobile
          const isMobile = window.innerWidth < 768;
-         const padding = isMobile ? 4 : 32; 
+         const padding = isMobile ? 0 : 32; // No padding on mobile to maximize width
          const availableW = Math.max(50, containerW - padding);
          const availableH = Math.max(50, containerH - padding);
         
@@ -411,6 +411,7 @@ export default function StoryBuilder() {
  };
 
  const generateHTML = () => {
+     setShowDownloadMenu(false);
      let pagesHTML = '';
      pages.forEach((page) => {
          const imgFilters = `filter: brightness(${page.filters.brightness}%) contrast(${page.filters.contrast}%) saturate(${page.filters.saturate}%);`;
@@ -472,38 +473,45 @@ export default function StoryBuilder() {
  }, [activePageIndex, pages, isPlaying, resolution, previewScale]);
 
  return (
-   <div className="flex flex-col md:flex-row h-[100dvh] bg-gray-900 text-white overflow-hidden font-sans">
+   // Changed Root: min-h-[100dvh] allows scrolling, removed fixed height lock on mobile
+   <div className="flex flex-col md:flex-row md:h-[100dvh] min-h-[100dvh] bg-gray-900 text-white overflow-x-hidden font-sans">
      <div className="hidden"><canvas key={resolution.label} ref={canvasRef} width={resolution.width} height={resolution.height} /></div>
 
      {/* MOBILE HEADER (Visible only md:hidden) */}
-     <div className="md:hidden h-14 bg-gray-800 border-b border-gray-700 flex items-center px-4 justify-between shrink-0 z-20">
+     <div className="md:hidden h-12 bg-gray-800 border-b border-gray-700 flex items-center px-4 justify-between shrink-0 z-20 sticky top-0">
         <div className="flex items-center gap-2">
            <Smartphone className="w-5 h-5 text-orange-500" /> 
            <h1 className="text-sm font-bold text-white tracking-wide">Metamorphosis</h1>
         </div>
         <div className="flex items-center gap-2">
-            <button onClick={() => setShowDownloadMenu(!showDownloadMenu)} className="bg-gray-700 p-2 rounded-full text-gray-300 hover:text-white">
-                <Download className="w-4 h-4"/>
+            <button onClick={() => setShowDownloadMenu(!showDownloadMenu)} className="bg-gray-700 p-2 rounded-full text-gray-300 hover:text-white relative">
+                {isExportingVideo ? <Loader2 className="w-4 h-4 animate-spin text-orange-500"/> : <Download className="w-4 h-4"/>}
             </button>
              {showDownloadMenu && (
-                <div className="absolute right-2 top-14 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-2 z-50">
-                    <button onClick={downloadJPG} className="w-full text-left p-3 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors"><Camera className="w-4 h-4 flex-shrink-0"/> JPG Image</button>
-                    <button onClick={() => generateVideo('current')} className="w-full text-left p-3 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors"><Play className="w-4 h-4 flex-shrink-0"/> Current Slide</button>
+                <div className="absolute right-2 top-14 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-2 z-50">
+                    <button onClick={downloadJPG} className="w-full text-left p-3 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors items-center"><Camera className="w-4 h-4 flex-shrink-0 text-pink-500"/> JPG Image</button>
+                    <button onClick={() => { setExportScope('current'); generateVideo(); }} className="w-full text-left p-3 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors items-center"><Play className="w-4 h-4 flex-shrink-0 text-blue-500"/> Video (This Slide)</button>
+                    <button onClick={() => { setExportScope('all'); generateVideo(); }} className="w-full text-left p-3 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors items-center"><FilmIcon className="w-4 h-4 flex-shrink-0 text-purple-500"/> Video (Full Story)</button>
+                    <button onClick={generateHTML} className="w-full text-left p-3 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors items-center"><FileCode className="w-4 h-4 flex-shrink-0 text-orange-500"/> HTML Story</button>
                 </div>
             )}
         </div>
      </div>
 
-     {/* PREVIEW - Mobile Top (35vh) / Desktop Right (flex-1) */}
-     <div className="relative w-full h-[40vh] md:h-full md:flex-1 bg-black flex flex-col items-center justify-center overflow-hidden select-none order-first md:order-last shrink-0">
+     {/* PREVIEW - Dynamic Height on Mobile / Desktop Right (flex-1) */}
+     <div className="relative w-full md:h-full md:flex-1 bg-black flex flex-col items-center justify-center overflow-hidden select-none order-first md:order-last shrink-0">
         
         {/* Desktop-only download button (hidden on mobile) */}
         <div className="absolute top-6 right-6 z-50 hidden md:block">
-            <button onClick={() => setShowDownloadMenu(!showDownloadMenu)} className="bg-white/10 p-3 rounded-full backdrop-blur-md hover:bg-white/20 text-white transition-all"><Download className="w-5 h-5"/></button>
+            <button onClick={() => setShowDownloadMenu(!showDownloadMenu)} className="bg-white/10 p-3 rounded-full backdrop-blur-md hover:bg-white/20 text-white transition-all relative">
+                {isExportingVideo ? <Loader2 className="w-5 h-5 animate-spin text-orange-500"/> : <Download className="w-5 h-5"/>}
+            </button>
             {showDownloadMenu && (
-                <div className="absolute right-0 top-12 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-2 z-50">
-                    <button onClick={downloadJPG} className="w-full text-left p-2 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors"><Camera className="w-4 h-4 flex-shrink-0"/> JPG Image</button>
-                    <button onClick={() => generateVideo('current')} className="w-full text-left p-2 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors"><Play className="w-4 h-4 flex-shrink-0"/> Current Slide</button>
+                <div className="absolute right-0 top-12 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-2 z-50">
+                    <button onClick={downloadJPG} className="w-full text-left p-2 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors items-center"><Camera className="w-4 h-4 flex-shrink-0 text-pink-500"/> JPG Image</button>
+                    <button onClick={() => { setExportScope('current'); generateVideo(); }} className="w-full text-left p-2 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors items-center"><Play className="w-4 h-4 flex-shrink-0 text-blue-500"/> Video (Current Slide)</button>
+                    <button onClick={() => { setExportScope('all'); generateVideo(); }} className="w-full text-left p-2 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors items-center"><FilmIcon className="w-4 h-4 flex-shrink-0 text-purple-500"/> Video (Full Story)</button>
+                    <button onClick={generateHTML} className="w-full text-left p-2 hover:bg-gray-700 rounded text-sm text-gray-300 flex gap-2 transition-colors items-center"><FileCode className="w-4 h-4 flex-shrink-0 text-orange-500"/> HTML Story</button>
                 </div>
             )}
         </div>
@@ -516,7 +524,17 @@ export default function StoryBuilder() {
            <button onClick={() => setActivePageIndex(Math.min(pages.length-1, activePageIndex+1))} className="p-1.5 hover:bg-white/10 rounded-full transition-colors"><ChevronRight className="text-white w-5 h-5"/></button>
         </div>
 
-        <div ref={containerRef} className="w-full h-full flex items-center justify-center bg-neutral-950 relative">
+        {/* Container Logic Change: 
+            On Desktop: h-full (flex expand)
+            On Mobile: aspect-ratio based on resolution. This forces the div to take the correct height naturally.
+        */}
+        <div ref={containerRef} 
+             className="w-full flex items-center justify-center bg-neutral-950 relative"
+             style={{ 
+                 height: window.innerWidth < 768 ? 'auto' : '100%', 
+                 aspectRatio: window.innerWidth < 768 ? `${resolution.width}/${resolution.height}` : 'auto' 
+             }}
+        >
             <div ref={previewRef} className="relative shadow-2xl"
                  style={{ width: resolution.width, height: resolution.height, transform: `scale(${previewScale})`, transformOrigin: 'center center' }}
                  onMouseDown={(e) => startDrag(e, 'image')}
@@ -531,7 +549,7 @@ export default function StoryBuilder() {
                           className={`absolute cursor-move transition-colors ${activeLayerId === text.id ? 'border-dashed border-2 border-orange-500/70' : 'border-transparent'}`}
                           style={{
                               left: `${text.x}%`, top: `${text.y}%`,
-                              width: '80%', height: 'auto', minHeight: '60px', // Larger hit area for mobile
+                              width: '80%', height: 'auto', minHeight: '60px',
                               transform: 'translate(0, -50%)'
                           }}
                      >
@@ -543,8 +561,8 @@ export default function StoryBuilder() {
         </div>
      </div>
 
-     {/* SIDEBAR / CONTROLS - Mobile Bottom (Flex-1) / Desktop Left */}
-     <div className="w-full md:w-96 bg-gray-800 border-t md:border-t-0 md:border-r border-gray-700 flex flex-col z-30 order-last md:order-first flex-1 md:flex-none md:h-full overflow-hidden shadow-[0_-4px_20px_rgba(0,0,0,0.3)] md:shadow-none">
+     {/* SIDEBAR / CONTROLS - Mobile Bottom (Natural Flow) / Desktop Left */}
+     <div className="w-full md:w-96 bg-gray-800 border-t md:border-t-0 md:border-r border-gray-700 flex flex-col z-30 order-last md:order-first md:h-full md:overflow-hidden shadow-[0_-4px_20px_rgba(0,0,0,0.3)] md:shadow-none">
          
          {/* Desktop Header (Hidden on mobile) */}
          <div className="hidden md:block p-5 border-b border-gray-700 bg-gray-800 sticky top-0 z-10">
@@ -561,7 +579,8 @@ export default function StoryBuilder() {
             <button onClick={() => setActiveTab('design')} className={`flex-1 py-3 md:py-3 text-sm font-medium transition-colors rounded-t ${activeTab==='design'?'bg-gray-700 text-violet-400 border-b-2 border-violet-500':'text-gray-400 hover:text-gray-300'}`}>Design</button>
          </div>
         
-         <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-5 md:space-y-6 custom-scrollbar pb-20 md:pb-8 bg-gray-800/50">
+         {/* Mobile: Natural height (no overflow-y-auto on parent), Desktop: overflow-y-auto */}
+         <div className="flex-grow md:overflow-y-auto p-4 md:p-6 space-y-5 md:space-y-6 custom-scrollbar pb-20 md:pb-8 bg-gray-800/50">
             {activeTab === 'content' && (
                <>
                   <div className="space-y-3">
@@ -631,13 +650,6 @@ export default function StoryBuilder() {
                     <div className="border-t border-gray-700 pt-4 pb-4"><label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><ArrowUp className="w-3 h-3" /> Background Overlay</label><div className="flex gap-4 items-start flex-col md:flex-row"><div className="flex items-center gap-3 w-full"><input type="color" value={activePage.overlay?.color || '#000000'} onChange={(e) => handleNestedChange('overlay', 'color', e.target.value)} className="h-10 w-10 rounded bg-transparent border-none cursor-pointer flex-shrink-0" /><span className="text-sm text-gray-400">Overlay Color</span></div><div className="flex-1 w-full space-y-2"><div className="flex justify-between text-xs text-gray-500"><span>Opacity</span><span>{Math.round((activePage.overlay?.opacity || 0.6)*100)}%</span></div><input type="range" min="0" max="1" step="0.1" value={activePage.overlay?.opacity || 0.6} onChange={(e) => handleNestedChange('overlay', 'opacity', e.target.value)} className="w-full h-2 bg-gray-600 rounded-lg appearance-none accent-pink-500"/></div><div className="flex-1 w-full space-y-2"><div className="flex justify-between text-xs text-gray-500"><span>Height</span><span>{activePage.overlay?.height || 40}%</span></div><input type="range" min="0" max="100" value={activePage.overlay?.height || 40} onChange={(e) => handleNestedChange('overlay', 'height', e.target.value)} className="w-full h-2 bg-gray-600 rounded-lg appearance-none accent-pink-500"/></div></div></div>
                 </div>
             )}
-         </div>
-
-         {/* Footer */}
-         <div className="p-4 border-t border-gray-700 bg-gray-800 z-50 space-y-3 flex-shrink-0 md:mb-0 mb-0 safe-area-bottom">
-            {isExportingVideo ? <button disabled className="w-full h-12 bg-gray-700 rounded text-white flex items-center justify-center gap-2 text-base"><Loader2 className="w-4 h-4 animate-spin"/> {Math.round(exportProgress)}%</button> :
-            <button onClick={() => generateVideo('all')} className="w-full h-12 bg-gradient-to-r from-orange-500 to-purple-600 rounded text-white font-bold shadow-lg hover:shadow-orange-500/20 flex items-center justify-center gap-2 text-base transition-all active:scale-95"><Video className="w-4 h-4"/> Export Video</button>}
-            <div className="flex gap-2"><button onClick={generateHTML} className="flex-1 bg-gray-700 rounded h-10 text-sm text-white hover:bg-gray-600 transition-colors active:scale-95">Download HTML</button></div>
          </div>
      </div>
    </div>
